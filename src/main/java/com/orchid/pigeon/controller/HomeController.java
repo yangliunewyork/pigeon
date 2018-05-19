@@ -1,4 +1,4 @@
-package com.orchid.pigeon.web.controller;
+package com.orchid.pigeon.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

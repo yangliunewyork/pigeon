@@ -12,7 +12,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.orchid.pigeon.web"})
+@ComponentScan(basePackages = {"com.orchid.pigeon"})
 public class WebConfig {
     /**
      * Configure a JSP view resolver
