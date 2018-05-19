@@ -1,0 +1,21 @@
+body {
+    font-family: sans-serif;
+}
+
+.bookList h1 {
+    font-size: 16pt;
+}
+
+.bookList ul {
+    list-style: none;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+.bookList ul li:first-child {
+    border-top: 0px;
+}
+
+.bookList ul li {
+    border-top: 1px solid #cccccc;
+}
