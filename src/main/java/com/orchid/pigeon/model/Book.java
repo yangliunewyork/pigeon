@@ -5,19 +5,22 @@ import org.springframework.stereotype.Component;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 @Component
-@Document(indexName = "content", type = "book")
+@Document(
+        indexName = "content",
+        type = "book"
+)
 public class Book {
     @Id
-    private Integer id;
+    private String id;
     private String title;
     private String content;
     private String author;
 
-    public Integer getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

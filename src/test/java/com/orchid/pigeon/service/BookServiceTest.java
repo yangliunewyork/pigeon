@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -69,11 +70,11 @@ public class BookServiceTest {
         book.setAuthor("F. Scott Fitzgerald");
         bookService.save(book);
 
-        Book testBook = bookService.findOne(book.getId());
+        Optional<Book> testBook = bookService.findById(book.getId());
 
-        assertNotNull(testBook.getId());
-        assertEquals(testBook.getTitle(), book.getTitle());
-        assertEquals(testBook.getAuthor(), book.getAuthor());
+        assertNotNull(testBook.get().getId());
+        assertEquals(testBook.get().getTitle(), book.getTitle());
+        assertEquals(testBook.get().getAuthor(), book.getAuthor());
 
     }
 
@@ -129,8 +130,10 @@ public class BookServiceTest {
         book.setAuthor("F. Scott Fitzgerald");
         bookService.save(book);
         bookService.delete(book);
-        Book testBook = bookService.findOne(book.getId());
-        assertNull(testBook);
+        List<Book> books = bookService.findByTitle("The Great Gatsby");
+        assertTrue(books.isEmpty());
+        //Book testBook = bookService.book.getId());
+        //assertNull(testBook);
     }
 
 }

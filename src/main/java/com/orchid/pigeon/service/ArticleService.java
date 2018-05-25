@@ -13,7 +13,7 @@ public interface ArticleService {
 
     public void delete(Article article);
 
-    public Article findOne(Integer id);
+   // public Article findOne(String id);
 
     public Iterable<Article> findAll();
 
