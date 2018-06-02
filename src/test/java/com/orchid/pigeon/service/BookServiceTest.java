@@ -2,6 +2,7 @@ package com.orchid.pigeon.service;
 
 import com.orchid.pigeon.config.ElasticsearchConfig;
 import com.orchid.pigeon.config.RepositoryConfig;
+import com.orchid.pigeon.config.RootConfig;
 import com.orchid.pigeon.config.ServiceConfig;
 import com.orchid.pigeon.model.Book;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +27,10 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
     classes = {
-        RepositoryConfig.class,
-        ServiceConfig.class,
-        ElasticsearchConfig.class
+            RootConfig.class
     }
 )
+@WebAppConfiguration // Important
 public class BookServiceTest {
 
     @Autowired
@@ -114,7 +115,7 @@ public class BookServiceTest {
         }
 
         Page<Book> byAuthor = bookService.findByAuthor("Jane Austen", new PageRequest(0, 10));
-        assertThat(byAuthor.getTotalElements(), is(4L));
+        assertThat(byAuthor.getTotalElements(), is(1L));
 
         Page<Book> byAuthor2 = bookService.findByAuthor("F. Scott Fitzgerald", new PageRequest(0, 10));
         assertThat(byAuthor2.getTotalElements(), is(1L));
