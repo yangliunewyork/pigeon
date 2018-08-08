@@ -4,21 +4,22 @@ import com.orchid.pigeon.model.Article;
 import com.orchid.pigeon.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class ArticleServiceImplementaion {
+public class ArticleServiceImplementaion  implements ArticleService {
 
     @Autowired
     private ArticleRepository articleRepository;
 
-    public void save(Article article) {
-
-        articleRepository.save(article);
+    public Article save(Article article) {
+        return articleRepository.save(article);
     }
 
     public void delete(Article article) {
@@ -26,9 +27,18 @@ public class ArticleServiceImplementaion {
         articleRepository.delete(article);
     }
 
-/*    public Article findOne(String id) {
-        return articleRepository.findOne(id);
-    }*/
+    @Override
+    public Optional<Article> findById(String id) {
+
+        return articleRepository.findById(id);
+    }
+
+    @Override
+    public Page<Article> findByAuthor(String author, PageRequest pageRequest) {
+
+        return articleRepository.findByAuthor(author, pageRequest);
+    }
+
 
     public Iterable<Article> findAll() {
         return articleRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "id")));

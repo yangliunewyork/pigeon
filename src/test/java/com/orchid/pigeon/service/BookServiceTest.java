@@ -1,9 +1,7 @@
 package com.orchid.pigeon.service;
 
-import com.orchid.pigeon.config.ElasticsearchConfig;
-import com.orchid.pigeon.config.RepositoryConfig;
+
 import com.orchid.pigeon.config.RootConfig;
-import com.orchid.pigeon.config.ServiceConfig;
 import com.orchid.pigeon.model.Book;
 import org.junit.Before;
 import org.junit.Test;
