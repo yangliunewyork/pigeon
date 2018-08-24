@@ -41,7 +41,7 @@ public class ArticleServiceImplementaion  implements ArticleService {
 
 
     public Iterable<Article> findAll() {
-        return articleRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "id")));
+        return articleRepository.findAll();
     }
 
     public Page<Article> findAll(Pageable pageable) {

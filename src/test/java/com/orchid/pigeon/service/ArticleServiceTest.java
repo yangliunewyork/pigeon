@@ -5,13 +5,13 @@ import com.orchid.pigeon.model.Article;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,7 @@ import java.util.Optional;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
@@ -30,18 +31,13 @@ import static org.junit.Assert.*;
 @WebAppConfiguration // Important
 public class ArticleServiceTest {
 
-    @Autowired
+
     private ArticleService articleService;
 
-    @Autowired
-    private ElasticsearchTemplate esTemplate;
 
     @Before
     public void before() {
-        esTemplate.deleteIndex(Article.class);
-        esTemplate.createIndex(Article.class);
-        esTemplate.putMapping(Article.class);
-        esTemplate.refresh(Article.class);
+        articleService = mock(ArticleService.class);
     }
 
     @Test
@@ -51,6 +47,8 @@ public class ArticleServiceTest {
         article.setId("123");
         article.setTitle("The Great Gatsby");
         article.setAuthor("F. Scott Fitzgerald");
+
+        when(articleService.save(article)).thenReturn(article);
         Article testArticle = articleService.save(article);
 
         assertNotNull(testArticle.getId());
@@ -68,11 +66,12 @@ public class ArticleServiceTest {
         article.setAuthor("F. Scott Fitzgerald");
         articleService.save(article);
 
-        Optional<Article> testArticle = articleService.findById(article.getId());
+        when(articleService.findById("123")).thenReturn(Optional.of(article));
+        Article testArticle = articleService.findById(article.getId()).get();
 
-        assertNotNull(testArticle.get().getId());
-        assertEquals(testArticle.get().getTitle(), article.getTitle());
-        assertEquals(testArticle.get().getAuthor(), article.getAuthor());
+        assertNotNull(testArticle.getId());
+        assertEquals(testArticle.getTitle(), article.getTitle());
+        assertEquals(testArticle.getAuthor(), article.getAuthor());
 
     }
 
@@ -85,6 +84,11 @@ public class ArticleServiceTest {
         article.setAuthor("F. Scott Fitzgerald");
         articleService.save(article);
 
+        List<Article> mockList = new ArrayList<Article>();
+        mockList.add(article);
+
+        when(articleService.findByTitle("The Great Gatsby")).thenReturn(mockList);
+
         List<Article> byTitle = articleService.findByTitle(article.getTitle());
         assertThat(byTitle.size(), is(1));
     }
@@ -92,7 +96,7 @@ public class ArticleServiceTest {
     @Test
     public void testFindByAuthor() {
 
-        List<Article> ArticleList = new ArrayList<Article>();
+        List<Article> articleList = new ArrayList<Article>();
 
         Article the_great_gatsby = new Article();
         the_great_gatsby.setId("123");
@@ -104,16 +108,28 @@ public class ArticleServiceTest {
         pride_and_prejudice.setTitle("Pride and Prejudice");
         pride_and_prejudice.setAuthor("Jane Austen");
 
-        ArticleList.add(the_great_gatsby);
-        ArticleList.add(pride_and_prejudice);
+        articleList.add(the_great_gatsby);
+        articleList.add(pride_and_prejudice);
 
-        for (Article article : ArticleList) {
+        for (Article article : articleList) {
             articleService.save(article);
         }
+
+        List<Article> janeAustenList = new ArrayList<Article>();
+        janeAustenList.add(pride_and_prejudice);
+        Page<Article> mockPageOne = new PageImpl<Article>(janeAustenList);
+        when(articleService.findByAuthor("Jane Austen", new PageRequest(0, 10)))
+                .thenReturn(mockPageOne);
 
         Page<Article> byAuthor = articleService.findByAuthor("Jane Austen", new PageRequest(0, 10));
         assertThat(byAuthor.getTotalElements(), is(1L));
 
+
+        List<Article> fitzgeraldList = new ArrayList<Article>();
+        fitzgeraldList.add(the_great_gatsby);
+        Page<Article> mockPageTwo = new PageImpl<Article>(fitzgeraldList);
+        when(articleService.findByAuthor("F. Scott Fitzgerald", new PageRequest(0, 10)))
+                .thenReturn(mockPageTwo);
         Page<Article> byAuthor2 = articleService.findByAuthor("F. Scott Fitzgerald", new PageRequest(0, 10));
         assertThat(byAuthor2.getTotalElements(), is(1L));
 
@@ -128,10 +144,11 @@ public class ArticleServiceTest {
         article.setAuthor("F. Scott Fitzgerald");
         articleService.save(article);
         articleService.delete(article);
+
+        when(articleService.findByTitle("The Great Gatsby")).thenReturn(new ArrayList<Article>());
         List<Article> Articles = articleService.findByTitle("The Great Gatsby");
         assertTrue(Articles.isEmpty());
-        //Article testArticle = ArticleService.Article.getId());
-        //assertNull(testArticle);
+
     }
 
 }

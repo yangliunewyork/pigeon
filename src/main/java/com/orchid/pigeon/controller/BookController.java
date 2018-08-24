@@ -12,6 +12,7 @@ public class BookController {
 
     @RequestMapping(value="/books", method = GET)
     public String books() {
+
         return "Books/BookList";
     }
 
