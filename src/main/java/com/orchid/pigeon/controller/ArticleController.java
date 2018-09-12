@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
@@ -50,6 +52,7 @@ public class ArticleController {
 
     @RequestMapping(value="/articles/add", method = POST)
     public String saveArticle(@ModelAttribute Article article) {
+        article.setPublishDate(new Date());
         Article my_article = articleService.save(article);
         return "redirect:/articles/" + my_article.getId();
     }
@@ -60,7 +63,7 @@ public class ArticleController {
         if (articleOptional.isPresent()) {
             articleService.delete(articleOptional.get());
         }
-        return "redirect:/articles/new";
+        return "redirect:/articles";
     }
 
     @RequestMapping(value="/articles/{articleId}", method = GET)

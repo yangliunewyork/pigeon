@@ -1,18 +1,21 @@
 package com.orchid.pigeon.model;
 
+import org.elasticsearch.search.DocValueFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 @Document(
-        indexName = "content",
+        indexName = "chinese_article",
         type = "article"
 )
 public class Article {
-    static final String CHINESE_ANALYZER = "ik";
+    static final String CHINESE_ANALYZER = "smartcn";
 
     @Id
     private String id;
@@ -21,7 +24,11 @@ public class Article {
 
     private String content;
 
+    private String quillContent;
+
     private String author;
+
+    private Date publishDate;
 
     public String getId() {
 
@@ -53,6 +60,14 @@ public class Article {
         this.content = content;
     }
 
+    public String getQuillContent() {
+        return this.quillContent;
+    }
+
+    public void setQuillContent(String quillContent) {
+        this.quillContent = quillContent;
+    }
+
     public String getAuthor() {
 
         return this.author;
@@ -61,6 +76,16 @@ public class Article {
     public void setAuthor(String author) {
 
         this.author = author;
+    }
+
+    public Date getPublishDate() {
+
+        return this.publishDate;
+    }
+
+    public void setPublishDate(Date date) {
+
+        this.publishDate = date;
     }
 
     @Override
